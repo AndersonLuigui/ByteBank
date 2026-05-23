@@ -41,6 +41,9 @@ public class ContaDAO {
         }
     }
 
+
+    // MÉTODOLISTAR=======
+
     public Set<Conta> listar() {
         PreparedStatement ps;
         ResultSet resultSet;
@@ -74,6 +77,12 @@ public class ContaDAO {
         }
         return contas;
     }
+
+
+
+    // MÉTODOLISTAR=======
+
+
 
     public Conta listarPorNumero(Integer numero) {
 

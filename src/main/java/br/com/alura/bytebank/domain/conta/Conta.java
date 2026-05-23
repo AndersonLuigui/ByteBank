@@ -60,4 +60,12 @@ public class Conta {
     public Boolean getEstaAtiva() {
         return estaAtiva;
     }
+
+    public void depositar(BigDecimal valor) {
+        this.saldo = this.saldo.add(valor);
+    }
+
+    public void sacar(BigDecimal valor) {
+        this.saldo = this.saldo.subtract(valor);
+    }
 }

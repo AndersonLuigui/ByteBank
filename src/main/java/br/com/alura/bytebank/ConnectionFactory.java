@@ -9,7 +9,7 @@ public class ConnectionFactory {
     public Connection recuperarConexao() {
         try {
             return DriverManager
-                    .getConnection("jdbc:mysql://localhost:3386/byte_bank?user=root&password=mysql");
+                    .getConnection("jdbc:mysql://localhost:3306/byte_bank?user=root&password=mysql");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

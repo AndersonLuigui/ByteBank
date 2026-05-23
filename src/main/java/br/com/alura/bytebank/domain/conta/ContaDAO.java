@@ -20,8 +20,8 @@ public class ContaDAO {
         var cliente = new Cliente(dadosDaConta.dadosCliente());
         var conta = new Conta(dadosDaConta.numero(), BigDecimal.ZERO, cliente, true);
 
-        String sql = "INSERT INTO conta (numero, saldo, cliente_nome, cliente_cpf, cliente_email)" +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO conta (numero, saldo, cliente_nome, cliente_cpf, cliente_email, esta_ativa)" +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -33,7 +33,7 @@ public class ContaDAO {
             preparedStatement.setString(5, dadosDaConta.dadosCliente().email());
             preparedStatement.setBoolean(6, true);
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             preparedStatement.close();
             conn.close();
         } catch (SQLException e) {
@@ -76,17 +76,23 @@ public class ContaDAO {
     }
 
     public Conta listarPorNumero(Integer numero) {
-        String sql = "SELECT * FROM conta WHERE numero = " + numero + " and esta_ativa = true";
 
-        Statement ps;
+        String sql = "SELECT * FROM conta WHERE numero = ? and esta_ativa = true";
+
+        PreparedStatement ps;
         ResultSet resultSet;
         Conta conta = null;
+
         try {
+
             ps = conn.prepareStatement(sql);
-            //ps.setInt(1, numero);
-            resultSet = ps.executeQuery(sql);//ps.executeQuery();
+
+            ps.setInt(1, numero);
+
+            resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
+
                 Integer numeroRecuperado = resultSet.getInt(1);
                 BigDecimal saldo = resultSet.getBigDecimal(2);
                 String nome = resultSet.getString(3);
@@ -96,24 +102,31 @@ public class ContaDAO {
 
                 DadosCadastroCliente dadosCadastroCliente =
                         new DadosCadastroCliente(nome, cpf, email);
+
                 Cliente cliente = new Cliente(dadosCadastroCliente);
 
                 conta = new Conta(numeroRecuperado, saldo, cliente, estaAtiva);
             }
+
             resultSet.close();
             ps.close();
             conn.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return conta;
     }
 
     public void alterar(Integer numero, BigDecimal valor) {
+
         PreparedStatement ps;
+
         String sql = "UPDATE conta SET saldo = ? WHERE numero = ?";
 
         try {
+
             conn.setAutoCommit(false);
 
             ps = conn.prepareStatement(sql);
@@ -121,48 +134,62 @@ public class ContaDAO {
             ps.setBigDecimal(1, valor);
             ps.setInt(2, numero);
 
-            ps.execute();
+            ps.executeUpdate();
+
+            conn.commit();
+
             ps.close();
             conn.close();
-            conn.commit();
+
         } catch (SQLException e) {
+
             try {
                 conn.rollback();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
+
             throw new RuntimeException(e);
         }
     }
 
     public void deletar(Integer numeroDaConta) {
+
         String sql = "DELETE FROM conta WHERE numero = ?";
 
         try {
+
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, numeroDaConta);
 
-            ps.execute();
+            ps.executeUpdate();
+
             ps.close();
             conn.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void alterarLogico(Integer numeroDaConta) {
+
         PreparedStatement ps;
+
         String sql = "UPDATE conta SET esta_ativa = false WHERE numero = ?";
 
         try {
+
             ps = conn.prepareStatement(sql);
 
             ps.setInt(1, numeroDaConta);
 
-            ps.execute();
+            ps.executeUpdate();
+
             ps.close();
             conn.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

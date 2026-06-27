@@ -157,7 +157,6 @@ public class ContaDAO {
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
-
             throw new RuntimeException(e);
         }
     }

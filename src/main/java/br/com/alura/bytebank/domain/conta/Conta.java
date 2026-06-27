@@ -1,6 +1,7 @@
 package br.com.alura.bytebank.domain.conta;
 
 import br.com.alura.bytebank.domain.cliente.Cliente;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class Conta {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(MysqlxDatatypes.Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Conta conta = (Conta) o;

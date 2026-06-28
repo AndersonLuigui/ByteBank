@@ -54,7 +54,7 @@ public class ContaService {
         var conta = buscarContaPorNumero(numeroDaConta);
 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RegraDeNegocioException("Valor do deposito deve ser superior a zero!");
+            throw new RegraDeNegocioException("Operação não permitida! Valor do depósito deve ser maior que zero");
         }
 
         if (!conta.getEstaAtiva()) {
